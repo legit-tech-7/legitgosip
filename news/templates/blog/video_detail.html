@@ -1,0 +1,222 @@
+{% extends 'blog/base.html' %}
+{% load static %}
+
+{% block title %}{{ video.title }} - BBC Video News{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Reset BBC container styles */
+    .bbc-container {
+        background: white;
+        padding: 0;
+        box-shadow: none;
+        border-radius: 0;
+    }
+    
+    .video-detail-header {
+        background: linear-gradient(135deg, #0887c5 0%, #149c7d 100%);
+        color: white;
+        padding: 40px 20px;
+        text-align: center;
+        margin-bottom: 0;
+    }
+    
+    .video-detail-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+        background: #f6f6f6;
+        min-height: 70vh;
+    }
+    
+    .breadcrumb {
+        margin-bottom: 20px;
+        font-size: 0.9rem;
+        color: rgba(255, 255, 255, 0.8);
+    }
+    
+    .breadcrumb a {
+        color: white;
+        text-decoration: none;
+    }
+    
+    .video-title {
+        font-size: 2.2rem;
+        margin-bottom: 15px;
+        font-family: 'Georgia', serif;
+        line-height: 1.3;
+    }
+    
+    .video-meta {
+        display: flex;
+        gap: 20px;
+        flex-wrap: wrap;
+        margin-bottom: 20px;
+        font-size: 0.95rem;
+        justify-content: center;
+    }
+    
+    .video-category {
+        background: rgba(255, 255, 255, 0.2);
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-weight: 600;
+    }
+    
+    .video-player-container {
+        background: #000;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+        margin: 0 auto 30px;
+        max-width: 900px;
+    }
+    
+    .video-player {
+        width: 100%;
+        height: auto;
+        min-height: 400px;
+        display: block;
+    }
+    
+    .video-info {
+        background: white;
+        padding: 30px;
+        border-radius: 12px;
+        margin-bottom: 40px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        max-width: 900px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    
+    .video-description {
+        font-size: 1.1rem;
+        line-height: 1.7;
+        color: #333;
+        margin-bottom: 25px;
+    }
+    
+    .video-stats {
+        display: flex;
+        gap: 25px;
+        color: #666;
+        font-size: 0.95rem;
+        padding-top: 20px;
+        border-top: 1px solid #e6e6e6;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+    
+    .stat-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .video-detail-header {
+            padding: 30px 15px;
+        }
+        
+        .video-title {
+            font-size: 1.7rem;
+        }
+        
+        .video-meta {
+            flex-direction: column;
+            gap: 10px;
+            align-items: center;
+        }
+        
+        .video-player-container {
+            border-radius: 8px;
+        }
+        
+        .video-player {
+            min-height: 250px;
+        }
+        
+        .video-info {
+            padding: 20px;
+        }
+        
+        .video-description {
+            font-size: 1rem;
+        }
+        
+        .video-stats {
+            flex-direction: column;
+            gap: 10px;
+            align-items: center;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="bbc-container">
+    <div class="video-detail-header">
+        <div class="video-detail-container">
+            <nav class="breadcrumb">
+                <a href="{% url 'home' %}">Home</a> > 
+                <a href="{% url 'video_list' %}">Videos</a> > 
+                <span>{{ video.title }}</span>
+            </nav>
+            
+            <h1 class="video-title">{{ video.title }}</h1>
+            
+            <div class="video-meta">
+                <span class="video-category">{{ video.category.name }}</span>
+                <span>📅 {{ video.publish_date|date:"F j, Y" }}</span>
+                <span>👁️ {{ video.view_count }} views</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="video-detail-container">
+        <!-- Video Player -->
+        <div class="video-player-container">
+            {% if video.video_file %}
+            <video class="video-player" controls controlsList="nodownload" poster="{% if video.thumbnail %}{{ video.thumbnail.url }}{% endif %}">
+                <source src="{{ video.video_file.url }}" type="video/mp4">
+                <source src="{{ video.video_file.url }}" type="video/webm">
+                <source src="{{ video.video_file.url }}" type="video/ogg">
+                Your browser does not support the video tag.
+            </video>
+            {% else %}
+            <div style="background: #333; color: white; padding: 60px 20px; text-align: center;">
+                <p style="font-size: 2rem;">🎥</p>
+                <p>Video not available</p>
+                <p>Please check back later.</p>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Video Information -->
+        <div class="video-info">
+            {% if video.description %}
+            <div class="video-description">
+                {{ video.description|linebreaks }}
+            </div>
+            {% endif %}
+            
+            <div class="video-stats">
+                <div class="stat-item">
+                    <span>👁️</span>
+                    <span>{{ video.view_count }} views</span>
+                </div>
+                <div class="stat-item">
+                    <span>📅</span>
+                    <span>Published {{ video.publish_date|date:"F j, Y" }}</span>
+                </div>
+                <div class="stat-item">
+                    <span>🏷️</span>
+                    <span>Category: {{ video.category.name }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

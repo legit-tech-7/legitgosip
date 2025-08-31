@@ -1,0 +1,329 @@
+{% extends 'blog/base.html' %}
+{% load static %}
+
+{% block title %}Video News - BBC Blog{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Reset BBC container styles */
+    .bbc-container {
+        background: white;
+        padding: 0;
+        box-shadow: none;
+        border-radius: 0;
+    }
+    
+    .video-header {
+        background: linear-gradient(135deg, #0887c5 0%, #149c7d 100%);
+        color: white;
+        padding: 60px 20px;
+        text-align: center;
+        margin-bottom: 0;
+    }
+    
+    .video-header h1 {
+        font-size: 3rem;
+        margin-bottom: 15px;
+        font-family: 'Georgia', serif;
+        font-weight: bold;
+    }
+    
+    .video-header p {
+        font-size: 1.3rem;
+        opacity: 0.9;
+        margin-bottom: 0;
+    }
+    
+    .video-content {
+        background: #f6f6f6;
+        padding: 40px 0;
+        min-height: 60vh;
+    }
+    
+    .video-container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 0 20px;
+    }
+    
+    .video-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr); /* 4 columns on desktop */
+        gap: 20px;
+    }
+    
+    .video-card {
+        background: white;
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+        border: 1px solid #e6e6e6;
+        text-align: center;
+    }
+    
+    .video-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    }
+    
+    .video-icon {
+        font-size: 3rem;
+        margin-bottom: 15px;
+        color: #bb1919;
+    }
+    
+    .video-title {
+        font-size: 1.1rem;
+        font-weight: bold;
+        margin-bottom: 12px;
+        color: #333;
+        line-height: 1.4;
+        font-family: 'Georgia', serif;
+        height: 60px;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+    }
+    
+    .video-category {
+        background: #bb1919;
+        color: white;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        display: inline-block;
+        margin-bottom: 15px;
+        font-weight: 600;
+    }
+    
+    .video-stats {
+        color: #999;
+        font-size: 0.85rem;
+        margin-bottom: 20px;
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        flex-wrap: wrap;
+    }
+    
+    .watch-btn {
+        display: block;
+        background: #bb1919;
+        color: white;
+        padding: 12px 20px;
+        border-radius: 6px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        font-size: 0.95rem;
+    }
+    
+    .watch-btn:hover {
+        background: #a01515;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(187, 25, 25, 0.3);
+    }
+    
+    .no-content {
+        text-align: center;
+        padding: 80px 20px;
+        color: #666;
+        grid-column: 1 / -1;
+        background: white;
+        border-radius: 12px;
+        border: 1px solid #e6e6e6;
+    }
+    
+    .no-content p {
+        font-size: 1.3rem;
+        margin-bottom: 20px;
+        color: #333;
+    }
+    
+    /* Responsive Design */
+    @media (max-width: 1200px) {
+        .video-grid {
+            grid-template-columns: repeat(3, 1fr); /* 3 columns on smaller desktop */
+            gap: 18px;
+        }
+        
+        .video-header h1 {
+            font-size: 2.5rem;
+        }
+        
+        .video-title {
+            font-size: 1rem;
+            height: 54px;
+        }
+    }
+    
+    @media (max-width: 900px) {
+        .video-grid {
+            grid-template-columns: repeat(2, 1fr); /* 2 columns on tablet */
+            gap: 16px;
+        }
+        
+        .video-header {
+            padding: 40px 20px;
+        }
+        
+        .video-header h1 {
+            font-size: 2.2rem;
+        }
+        
+        .video-header p {
+            font-size: 1.1rem;
+        }
+        
+        .video-title {
+            height: 48px;
+            -webkit-line-clamp: 2;
+        }
+    }
+    
+    @media (max-width: 768px) {
+        .video-content {
+            padding: 30px 0;
+        }
+        
+        .video-container {
+            padding: 0 15px;
+        }
+        
+        .video-grid {
+            grid-template-columns: 1fr; /* 1 column on mobile */
+            gap: 15px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        
+        .video-card {
+            padding: 18px;
+            border-radius: 8px;
+        }
+        
+        .video-icon {
+            font-size: 2.5rem;
+        }
+        
+        .video-title {
+            font-size: 1.1rem;
+            height: auto;
+            -webkit-line-clamp: 2;
+        }
+        
+        .video-stats {
+            flex-direction: row;
+            font-size: 0.8rem;
+            gap: 12px;
+        }
+        
+        .watch-btn {
+            padding: 14px;
+            font-size: 1rem;
+        }
+        
+        .no-content {
+            padding: 60px 15px;
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .video-header {
+            padding: 30px 15px;
+        }
+        
+        .video-header h1 {
+            font-size: 2rem;
+        }
+        
+        .video-container {
+            padding: 0 10px;
+        }
+        
+        .video-grid {
+            gap: 12px;
+        }
+        
+        .video-card {
+            padding: 15px;
+        }
+        
+        .video-icon {
+            font-size: 2.2rem;
+            margin-bottom: 12px;
+        }
+        
+        .video-title {
+            font-size: 1rem;
+            margin-bottom: 10px;
+        }
+        
+        .video-stats {
+            flex-direction: column;
+            gap: 5px;
+            margin-bottom: 15px;
+        }
+        
+        .no-content p {
+            font-size: 1.1rem;
+        }
+    }
+    
+    /* Animation for loading */
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .video-card {
+        animation: fadeIn 0.6s ease-out;
+    }
+    
+    /* Ensure proper BBC styling */
+    .main-content {
+        background: #f6f6f6;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="bbc-container">
+    <!-- Header Section -->
+    <div class="video-header">
+        <h1>BBC Video News</h1>
+        <p>Watch the latest news videos</p>
+    </div>
+
+    <!-- Content Section -->
+    <div class="video-content">
+        <div class="video-container">
+            <div class="video-grid">
+                {% for video in videos %}
+                <div class="video-card">
+                    <div class="video-icon">🎥</div>
+                    
+                    <h3 class="video-title">{{ video.title }}</h3>
+                    
+                    <span class="video-category">{{ video.category.name }}</span>
+                    
+                    <div class="video-stats">
+                        <span>👁️ {{ video.view_count }} views</span>
+                        <span>📅 {{ video.publish_date|date:"M d, Y" }}</span>
+                    </div>
+                    
+                    <a href="{% url 'video_detail' video.slug %}" class="watch-btn">Watch Video</a>
+                </div>
+                {% empty %}
+                <div class="no-content">
+                    <p>No videos available yet. Check back soon!</p>
+                    <p style="font-size: 2rem;">🎥</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

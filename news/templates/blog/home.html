@@ -1,0 +1,91 @@
+{% extends 'blog/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="bbc-container">
+    
+    <!-- Welcome Section -->
+    <div class="welcome-section">
+        <h1>Welcome to DNN Blog</h1>
+        <p>Your source for the latest news and stories</p>
+    </div>
+            <div style="height: 150px; width: 100%; background-color: #14db14;"> ad placeholder</div>
+
+    
+
+    <!-- Featured Posts -->
+    {% if featured_posts %}
+    <section class="featured-section">
+        <h2 class="section-title">Featured Stories</h2>
+        <div class="featured-grid">
+            {% for post in featured_posts %}
+            <div class="featured-item">
+                {% if post.image %}
+                <img src="{{ post.image.url }}" alt="{{ post.title }}" class="featured-image">
+                {% endif %}
+                <div class="featured-content">
+                 
+                    <h3><a href="{% url 'post_detail' post.slug %}" style="color:  #14db14;">{{ post.title }}</a></h3>
+                    <p>{{ post.excerpt|truncatewords:12 }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+                <div style="height: 150px; width: 100%; background-color: #14db14;"> ad placeholder</div>
+
+    </section>
+    {% endif %}
+
+    <!-- Trending Posts -->
+    {% if trending_posts %}
+    <section class="trending-section">
+        <h2 class="section-title">Trending Now</h2>
+        <div class="trending-grid">
+            {% for post in trending_posts %}
+            <div class="trending-item">
+                <span class="trending-number">{{ forloop.counter }}</span>
+                <div class="trending-content">
+                    <h4><a href="{% url 'post_detail' post.slug %}" style="color:  #14db14;">{{ post.title }}</a></h4>
+                    <span class="category-tag" style="color: {{ post.category.color }};">
+                        {{ post.category.name }}
+                    </span>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+                <div style="height: 150px; width: 100%; background-color: #14db14;"> ad placeholder</div>
+
+    </section>
+    {% endif %}
+
+    <!-- Posts by Category -->
+    {% for category, posts in category_posts.items %}
+    <section class="category-section">
+        <h2 class="section-title" style="border-left: 4px solid {{ category.color }}; padding-left: 10px;">
+            {{ category.name }}
+        </h2>
+        <div class="category-grid">
+            {% for post in posts %}
+            <article class="post-card">
+                {% if post.image %}
+                <img src="{{ post.image.url }}" alt="{{ post.title }}" class="post-image">
+                {% endif %}
+                <div class="post-content">
+                    <h3><a href="{% url 'post_detail' post.slug %}" style="color:  #14db14;">{{ post.title }}</a></h3>
+                    <p>{{ post.excerpt|truncatewords:20}}</p>
+                    <div class="post-meta">
+                        <span class="post-date">{{ post.published_date|date:"M d, Y" }}</span>
+                    </div>
+                </div>
+            </article>
+            {% endfor %}
+        </div>
+        <div class="view-all">
+            <a href="{% url 'category_posts' category.slug %}" class="view-all-link">View all {{ category.name }} →</a>
+        </div>
+        <div style="height: 150px; width: 100%; background-color: #14db14;"> ad placeholder</div>
+    </section>
+    {% endfor %}
+</div>
+{% endblock %}
+
